@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For angie</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #ffc0cb;
+      background-image: radial-gradient(#5a2a2a 2px, transparent 2px);
+      background-size: 30px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #000;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.9);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      max-width: 700px;
+      animation: fadeIn 1s ease;
+      position: relative;
+    }
+
+    #page2, #page3 { display: none; }
+
+    button {
+      padding: 12px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      background: #ff6fa5;
+      color: white;
+      font-size: 1rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #ff6fa5;
+    }
+
+    .hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 20px;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+      from { transform: translateY(100vh); opacity: 1; }
+      to { transform: translateY(-10vh); opacity: 0; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .sequence-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      color: #ff2e82;
+      opacity: 0;
+      animation: fadeSequence 3s ease forwards;
+      pointer-events: none;
+      width: 80%;
+    }
+
+    @keyframes fadeSequence {
+      0% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      80% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -60%) scale(0.95); }
+    }
+
+    img { max-width: 100%; border-radius: 15px; margin-top: 15px; }
+
+    #timer { font-weight: bold; margin-top: 15px; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="card" id="page1">
+  <h1>angie, will you go out with me?</h1>
+  <p>i missed you</p>
+  <button onclick="goToPage(2)">Yes</button>
+  <button onmouseover="moveButton(this)">No</button>
+</div>
+
+<div class="card" id="page2">
+  <h1>you make my life so much better</h1>
+  <p>i'm so glad to have you again.</p>
+  <div id="timer"></div>
+  <img src="discord.png" alt="our chat">
+  <br><button onclick="goToPage(3)">next</button>
+</div>
+
+<div class="card" id="page3">
+  <h1>for angie</h1>
+  <p>i love you so damn much, you make my whole life so much better, i really want you back in my life, i want you so much, you fullfill me and you erase every negativity around me, your presence alone is like one of a angel's, i'll be dedicated towards you all my life.</p>
+</div>
+
+<audio id="song" loop>
+  <source src="pushing-it-down-and-praying.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// --- page switching ---
+function goToPage(page) {
+  if (page === 2) {
+    showLoveMoment();
+    return;
+  }
+
+  document.getElementById('page1').style.display = 'none';
+  document.getElementById('page2').style.display = 'none';
+  document.getElementById('page3').style.display = 'none';
+  document.getElementById('page' + page).style.display = 'block';
+}
+
+// 🤗 emotional moment
+function showLoveMoment() {
+  const overlay = document.createElement('div');
+  Object.assign(overlay.style, {
+    position:'fixed', top:0,left:0,width:'100%',height:'100%',
+    background:'rgba(255,192,203,0.95)',
+    display:'flex',alignItems:'center',justifyContent:'center',
+    flexDirection:'column',fontSize:'2rem',color:'#ff2e82',
+    zIndex:9999,animation:'fadeIn 0.5s ease'
+  });
+
+  overlay.innerHTML = `
+    <div>you said yes 🫂</div>
+    <div style="font-size:1.2rem;margin-top:10px;">you have no idea how happy that makes me</div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // 🎵 START SONG INSTANTLY FROM 0
+  const song = document.getElementById('song');
+  song.pause();
+  song.currentTime = 0;
+  song.volume = 0.5;
+  song.play().catch(()=>{});
+
+  setTimeout(() => {
+    overlay.remove();
+    document.getElementById('page1').style.display = 'none';
+    document.getElementById('page2').style.display = 'block';
+
+    startSequence();
+  }, 2500);
+}
+
+// 💬 SEQUENCE
+const sequenceMessages = [
+  "i missed you",
+  "you matter so much to me",
+  "you make my life better",
+  "you are not the weight you carry",
+  "nor the doubt that dimmed your light",
+  "you deserve happiness",
+  "i'm here for you",
+  "i care about you so much",
+  "i love you"
+];
+
+function startSequence() {
+  let index = 0;
+
+  function showNext() {
+    if (index >= sequenceMessages.length) return;
+
+    const text = document.createElement('div');
+    text.className = 'sequence-text';
+    text.innerText = sequenceMessages[index];
+
+    document.getElementById('page2').appendChild(text);
+
+    index++;
+    setTimeout(showNext, 2500);
+  }
+
+  showNext();
+}
+
+// --- runaway no button ---
+function moveButton(btn) {
+  const x = Math.random()*200-100;
+  const y = Math.random()*200-100;
+  btn.style.transform = `translate(${x}px,${y}px)`;
+}
+
+// --- hearts background ---
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.style.left = Math.random()*100 + 'vw';
+  heart.innerHTML = '❤';
+  document.getElementById('hearts').appendChild(heart);
+  setTimeout(()=>heart.remove(),5000);
+}
+setInterval(createHeart, 800);
+
+// --- timer ---
+const startDate = new Date('2024-10-31T00:00:00');
+setInterval(()=>{
+  const now = new Date();
+  let diff = Math.floor((now - startDate)/1000);
+
+  const days = Math.floor(diff / 86400);
+  diff %= 86400;
+  const hours = Math.floor(diff / 3600);
+  diff %= 3600;
+  const minutes = Math.floor(diff / 60);
+  const seconds = diff % 60;
+
+  document.getElementById('timer').innerHTML =
+    '<b>together for:</b><br>' +
+    days + ' days ' + hours + ' hours ' +
+    minutes + ' minutes ' + seconds + ' seconds';
+},1000);
+</script>
+</body>
+</html>
